@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,7 +116,7 @@ public class ChooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel = LEVEL_PROVINCE;
         }else {
-            String url = "http://guolin.teach/api/china";
+            String url = "http://guolin.tech/api/china";
             queryFromServce(url,"province");
 
         }
@@ -126,7 +127,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCities(){
         titleText.setText(selectedProvince.getProvinceName());
         backButton.setVisibility(View.VISIBLE);
-        cityList = DataSupport.where("provinceId=?",String.valueOf(selectedProvince.getId())).find(City.class);
+        cityList = DataSupport.where("provinceid=?",String.valueOf(selectedProvince.getId())).find(City.class);
         if (cityList.size()>0){
 dataList.clear();
             for (City city: cityList
@@ -138,7 +139,7 @@ dataList.clear();
             currentLevel = LEVEL_CITY;
         }else {
             int provinceCode = selectedProvince.getProvinceCode();
-            String url = "http://guolin.teach/api/china/"+provinceCode;
+            String url = "http://guolin.tech/api/china/"+provinceCode;
             queryFromServce(url,"city");
         }
     }
@@ -148,7 +149,7 @@ dataList.clear();
     private  void queryCounties(){
       titleText.setText(selectedCity.getCityName());
       backButton.setVisibility(View.VISIBLE);
-        countyList = DataSupport.where("cityId = ？",String.valueOf(selectedCity.getId())).find(County.class);
+        countyList = DataSupport.where("cityid =?",String.valueOf(selectedCity.getId())).find(County.class);
         if (countyList.size()>0){
             dataList.clear();
             for (County cointy: countyList
@@ -163,7 +164,8 @@ dataList.clear();
         }else {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
-            String url = "http://guolin.teach/api/china/"+provinceCode+"/"+cityCode;
+            String url = "http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
+            Log.d("县url","="+url);
             queryFromServce(url,"county");
         }
     }
@@ -192,7 +194,9 @@ dataList.clear();
                     result = Utility.handleCityResponse(responseText,selectedProvince.getId());
                 }else if ("county".equals(type)){
                     result = Utility.handleConuntyResponse(responseText,selectedCity.getId());
+
                 }
+
                 if (result){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

@@ -1,6 +1,7 @@
 package com.coolweather.android.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
@@ -63,17 +64,18 @@ public class Utility {
 
     public static boolean handleConuntyResponse(String response,int cityId){
         if (!TextUtils.isEmpty(response)){
+            Log.d("区县数据:",response);
             try {
                 JSONArray allCounties = new JSONArray(response);
                 for (int i = 0;i<allCounties.length();i++){
                     JSONObject countyObject = allCounties.getJSONObject(i);
                     County county = new County();
                     county.setCountyName(countyObject.getString("name"));
-                    county.setWeatherId(countyObject.getInt("weather_id"));
+                    county.setWeatherId(countyObject.getString("weather_id"));
                     county.setCityId(cityId);
                     county.save();
-                    return true;
                 }
+                return true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
