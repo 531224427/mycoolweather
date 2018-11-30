@@ -2,6 +2,7 @@ package com.coolweather.android;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -83,6 +84,14 @@ public class ChooseAreaFragment extends Fragment {
                 }else if (currentLevel==LEVEL_CITY){
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if (currentLevel==LEVEL_COUNTY){
+                    selectedCounty = countyList.get(position);
+                    String weatherId = selectedCounty.getWeatherId();
+                    Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
+
                 }
             }
         });
@@ -165,7 +174,6 @@ dataList.clear();
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
             String url = "http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
-            Log.d("县url","="+url);
             queryFromServce(url,"county");
         }
     }
